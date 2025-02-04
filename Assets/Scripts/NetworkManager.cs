@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager instance;
     private Telepathy.Client client;
+
     private void Awake(){
         Application.runInBackground = true;
 
@@ -20,8 +22,11 @@ public class NetworkManager : MonoBehaviour
     
     void Start(){
         client = new Telepathy.Client(1024);
+        
         client.OnConnected = () => Debug.Log("Client Connected");
+        client.OnData = PacketHandler.HandleData;
         client.OnDisconnected = () => Debug.Log("Client Disconnected");
+
         client.Connect("localhost", 13);
     }
 
